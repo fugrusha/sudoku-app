@@ -101,10 +101,16 @@ sudoku-app/
    cp .env.example .env
    ```
 
-3. **Initialize the database**
+3. **Initialize the database and generate puzzles**
    ```bash
-   npm run build
+   # Initialize database schema
    npm run db:init
+
+   # Generate 30 puzzles (10 easy, 10 medium, 10 hard)
+   npm run db:generate
+
+   # Optional: Test the Sudoku logic
+   npm run test:sudoku
    ```
 
 4. **Start the backend server**
@@ -185,10 +191,12 @@ Content-Type: application/json
 - [x] Integrate Telegram Mini App SDK
 - [x] Create basic app shell
 
-### 🚧 Phase 2: Sudoku Logic (Next)
-- [ ] Implement puzzle validation
-- [ ] Create puzzle generator
-- [ ] Add more sample puzzles
+### ✅ Phase 2: Sudoku Logic (Completed)
+- [x] Implement comprehensive 6x6 Sudoku validator
+- [x] Create backtracking solver algorithm
+- [x] Build puzzle generator with difficulty levels
+- [x] Ensure unique solution validation
+- [x] Add puzzle generation utilities
 
 ### 📋 Phase 3: UI Development (Upcoming)
 - [ ] Create puzzle list page
@@ -247,6 +255,45 @@ CREATE TABLE user_progress (
 );
 ```
 
+## Sudoku Logic & Utilities
+
+### Backend Utilities
+
+The backend includes comprehensive Sudoku logic:
+
+**`sudokuValidator.ts`** - Validation and solving
+- `validateSolution(grid)` - Validates a complete 6x6 Sudoku solution
+- `isValidPlacement(grid, row, col, num)` - Checks if a number can be placed in a cell
+- `solveSudoku(grid)` - Solves a puzzle using backtracking algorithm
+- `hasUniqueSolution(grid)` - Ensures a puzzle has exactly one solution
+
+**`sudokuGenerator.ts`** - Puzzle generation
+- `generateCompleteSolution()` - Creates a valid complete Sudoku grid
+- `generatePuzzle(difficulty)` - Generates a puzzle with specified difficulty
+- `generatePuzzleSet(difficulty, count)` - Generates multiple puzzles
+- `validatePuzzle(puzzle)` - Validates a puzzle is solvable and unique
+
+**Difficulty Levels:**
+- **Easy**: 24-28 clues (out of 36 cells)
+- **Medium**: 20-23 clues
+- **Hard**: 16-19 clues
+
+### Available Commands
+
+```bash
+# Initialize database schema
+npm run db:init
+
+# Generate puzzles (clears existing, creates 30 new ones)
+npm run db:generate
+
+# Test Sudoku logic
+npm run test:sudoku
+
+# Start development server
+npm run dev
+```
+
 ## Telegram Mini App Setup
 
 To test in Telegram:
@@ -266,4 +313,4 @@ MIT
 
 ## Next Steps
 
-Continue with Phase 2: Implement Sudoku logic and puzzle generation!
+Continue with Phase 3: Build the UI components (Puzzle List, Game Board, Number Picker)!
