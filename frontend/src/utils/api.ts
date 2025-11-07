@@ -1,6 +1,6 @@
 import { Puzzle, PuzzleList, ValidationResponse } from '../types/sudoku';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
 
 export async function fetchPuzzleList(): Promise<PuzzleList> {
   const response = await fetch(`${API_BASE_URL}/puzzles`);

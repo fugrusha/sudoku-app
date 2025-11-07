@@ -1,4 +1,5 @@
 import db from '../config/database.js';
+import { validateSolution as validateSudokuSolution } from '../utils/sudokuValidator.js';
 
 export interface Puzzle {
   id: number;
@@ -59,8 +60,16 @@ export class PuzzleModel {
 
     const correctSolution = JSON.parse(puzzle.solution);
 
-    // Compare solutions
-    return JSON.stringify(userSolution) === JSON.stringify(correctSolution);
+    // First check if it's an exact match
+    const exactMatch = JSON.stringify(userSolution) === JSON.stringify(correctSolution);
+
+    if (exactMatch) {
+      return true;
+    }
+
+    // If not exact match, validate if it's a valid solution
+    // (in case the puzzle has alternative valid solutions)
+    return validateSudokuSolution(userSolution);
   }
 
   // Get all puzzles (for list view)
