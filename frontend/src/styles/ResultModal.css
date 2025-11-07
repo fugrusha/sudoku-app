@@ -1,0 +1,159 @@
+.result-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.result-modal {
+  background-color: var(--tg-theme-bg-color, #fff);
+  border-radius: 20px;
+  padding: 32px 24px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.result-icon {
+  font-size: 72px;
+  margin-bottom: 16px;
+  animation: scaleIn 0.5s ease 0.2s both;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.result-icon.success {
+  animation: scaleIn 0.5s ease 0.2s both, bounce 0.6s ease 0.7s;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.result-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  color: var(--tg-theme-text-color, #000);
+}
+
+.result-message {
+  font-size: 16px;
+  color: var(--tg-theme-hint-color, #666);
+  margin: 0 0 32px 0;
+  line-height: 1.5;
+}
+
+.result-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.action-button {
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.action-button.primary {
+  background-color: var(--tg-theme-button-color, #3390ec);
+  color: var(--tg-theme-button-text-color, #fff);
+}
+
+.action-button.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(51, 144, 236, 0.3);
+}
+
+.action-button.primary:active {
+  transform: translateY(0);
+  opacity: 0.9;
+}
+
+.action-button.secondary {
+  background-color: transparent;
+  color: var(--tg-theme-hint-color, #999);
+  border: 2px solid var(--tg-theme-hint-color, #999);
+}
+
+.action-button.secondary:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.action-button.secondary:active {
+  background-color: rgba(0, 0, 0, 0.1);
+  transform: scale(0.98);
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .result-modal {
+    padding: 28px 20px;
+  }
+
+  .result-icon {
+    font-size: 60px;
+  }
+
+  .result-title {
+    font-size: 22px;
+  }
+
+  .result-message {
+    font-size: 15px;
+  }
+
+  .action-button {
+    padding: 14px;
+    font-size: 15px;
+  }
+}
