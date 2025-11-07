@@ -1,29 +1,12 @@
 import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useTelegram } from './hooks/useTelegram';
+import PuzzleListPage from './pages/PuzzleListPage';
+import GamePage from './pages/GamePage';
 import './styles/App.css';
 
-// Placeholder components (we'll create these in Phase 3)
-function PuzzleListPage() {
-  return (
-    <div className="app">
-      <h1 className="text-center">Sudoku Puzzles</h1>
-      <p className="text-center mt-2">Coming soon...</p>
-    </div>
-  );
-}
-
-function GamePage() {
-  return (
-    <div className="app">
-      <h1 className="text-center">Game Board</h1>
-      <p className="text-center mt-2">Coming soon...</p>
-    </div>
-  );
-}
-
 function App() {
-  const { tg, user } = useTelegram();
+  const { tg } = useTelegram();
 
   useEffect(() => {
     // Apply Telegram theme colors to CSS variables
@@ -43,18 +26,10 @@ function App() {
 
   return (
     <Router>
-      <div className="app">
-        {user && (
-          <div className="text-center mb-2">
-            <p>Welcome, {user.first_name}! 👋</p>
-          </div>
-        )}
-
-        <Routes>
-          <Route path="/" element={<PuzzleListPage />} />
-          <Route path="/puzzle/:id" element={<GamePage />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/" element={<PuzzleListPage />} />
+        <Route path="/puzzle/:id" element={<GamePage />} />
+      </Routes>
     </Router>
   );
 }

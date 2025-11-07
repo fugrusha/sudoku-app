@@ -1,0 +1,82 @@
+.game-page-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.game-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.game-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+  color: var(--tg-theme-text-color, #000);
+}
+
+.game-instruction {
+  font-size: 14px;
+  color: var(--tg-theme-hint-color, #999);
+  margin: 0;
+}
+
+.game-actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.submit-button {
+  padding: 16px 32px;
+  font-size: 18px;
+  font-weight: 600;
+  background-color: var(--tg-theme-button-color, #3390ec);
+  color: var(--tg-theme-button-text-color, #fff);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  min-width: 200px;
+}
+
+.submit-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(51, 144, 236, 0.3);
+}
+
+.submit-button:active:not(:disabled) {
+  transform: translateY(0);
+  opacity: 0.9;
+}
+
+.submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .game-page-container {
+    padding: 16px;
+  }
+
+  .game-title {
+    font-size: 20px;
+  }
+
+  .game-instruction {
+    font-size: 13px;
+  }
+
+  .submit-button {
+    padding: 14px 28px;
+    font-size: 16px;
+    min-width: 180px;
+  }
+}

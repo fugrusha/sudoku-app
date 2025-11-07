@@ -1,0 +1,126 @@
+.puzzle-list-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.puzzle-list-title {
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 8px;
+  color: var(--tg-theme-text-color, #000);
+}
+
+.puzzle-list-subtitle {
+  font-size: 16px;
+  text-align: center;
+  margin-bottom: 32px;
+  color: var(--tg-theme-hint-color, #999);
+}
+
+.difficulty-section {
+  margin-bottom: 32px;
+}
+
+.difficulty-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.puzzle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+}
+
+.puzzle-card {
+  background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
+  border: 2px solid;
+  border-radius: 12px;
+  padding: 20px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-height: 100px;
+  font-family: inherit;
+}
+
+.puzzle-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.puzzle-card:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.puzzle-number {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--tg-theme-text-color, #000);
+}
+
+.puzzle-difficulty {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--tg-theme-hint-color, #999);
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  font-size: 18px;
+  color: var(--tg-theme-hint-color, #999);
+}
+
+.retry-button {
+  padding: 12px 24px;
+  background-color: var(--tg-theme-button-color, #3390ec);
+  color: var(--tg-theme-button-text-color, #ffffff);
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.retry-button:active {
+  opacity: 0.8;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .puzzle-list-container {
+    padding: 16px;
+  }
+
+  .puzzle-list-title {
+    font-size: 24px;
+  }
+
+  .puzzle-grid {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 10px;
+  }
+
+  .puzzle-card {
+    padding: 16px 12px;
+    min-height: 90px;
+  }
+
+  .puzzle-number {
+    font-size: 20px;
+  }
+}
