@@ -1,0 +1,26 @@
+{
+  "name": "sudoku-miniapp-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "db:init": "tsx src/config/initDb.ts"
+  },
+  "dependencies": {
+    "express": "^4.21.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "better-sqlite3": "^11.5.0",
+    "express-validator": "^7.2.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/cors": "^2.8.17",
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.7.5",
+    "typescript": "^5.6.3",
+    "tsx": "^4.19.1"
+  }
+}
