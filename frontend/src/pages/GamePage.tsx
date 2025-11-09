@@ -271,13 +271,31 @@ export default function GamePage() {
   return (
     <div className="game-page-container">
       <div className="game-header">
-        <h1 className="game-title">Puzzle #{id}</h1>
+        <div className="game-header-top">
+          <h1 className="game-title">Puzzle #{id}</h1>
+          <button className="menu-button" onClick={handleBackToList} title="Back to Menu">
+            ☰
+          </button>
+        </div>
         <p className="game-instruction">
           {isComplete
             ? 'Complete! Tap Submit to check your solution.'
             : 'Tap an empty cell to fill it'}
         </p>
       </div>
+
+      {/* Congratulation message when puzzle is complete */}
+      {isComplete && !showResult && (
+        <div className="congratulation-banner">
+          <div className="congratulation-icon">🎉</div>
+          <div className="congratulation-content">
+            <h2 className="congratulation-title">Congratulations!</h2>
+            <p className="congratulation-message">
+              You've filled all the cells! Submit your solution to verify it's correct.
+            </p>
+          </div>
+        </div>
+      )}
 
       <GameControls
         timer={timer.formattedTime}
