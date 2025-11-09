@@ -1,21 +1,32 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTelegram } from '../hooks/useTelegram';
+import { useGameHistory } from '../hooks/useGameHistory';
+import { useTimer } from '../hooks/useTimer';
+import { useLocalStorage, removeFromLocalStorage } from '../hooks/useLocalStorage';
 import GameBoard from '../components/GameBoard';
 import NumberPicker from '../components/NumberPicker';
 import ResultModal from '../components/ResultModal';
-import { Board } from '../types/sudoku';
+import GameControls from '../components/GameControls';
+import { Board, Puzzle } from '../types/sudoku';
 import { fetchPuzzleById, validateSolution } from '../utils/api';
 import { isBoardComplete, copyBoard } from '../utils/sudoku';
 import '../styles/GamePage.css';
+
+interface SavedGameState {
+  board: Board;
+  seconds: number;
+  moveCount: number;
+}
 
 export default function GamePage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { tg } = useTelegram();
+  const timer = useTimer(false);
 
+  const [puzzle, setPuzzle] = useState<Puzzle | null>(null);
   const [initialBoard, setInitialBoard] = useState<Board | null>(null);
-  const [currentBoard, setCurrentBoard] = useState<Board | null>(null);
   const [selectedCell, setSelectedCell] = useState<{ row: number; col: number } | null>(null);
   const [showNumberPicker, setShowNumberPicker] = useState(false);
   const [showResult, setShowResult] = useState(false);
@@ -24,15 +35,49 @@ export default function GamePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isValidating, setIsValidating] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+
+  const storageKey = `sudoku-game-${id}`;
+  const [savedState, setSavedState] = useLocalStorage<SavedGameState | null>(storageKey, null);
+
+  // Initialize game history with initial board
+  const gameHistory = useGameHistory(initialBoard || []);
 
   useEffect(() => {
     loadPuzzle();
   }, [id]);
 
   useEffect(() => {
+    // Restore saved game state
+    if (initialBoard && savedState) {
+      gameHistory.reset(savedState.board);
+      timer.reset();
+      // We can't perfectly restore timer, but we can note it was in progress
+    }
+  }, [initialBoard]);
+
+  useEffect(() => {
+    // Auto-save game state
+    if (gameHistory.currentBoard && !isBoardComplete(gameHistory.currentBoard)) {
+      setSavedState({
+        board: gameHistory.currentBoard,
+        seconds: timer.seconds,
+        moveCount: gameHistory.moveCount,
+      });
+    }
+  }, [gameHistory.currentBoard, timer.seconds, gameHistory.moveCount]);
+
+  useEffect(() => {
+    // Start timer when puzzle loads
+    if (initialBoard && !timer.isRunning) {
+      timer.start();
+    }
+  }, [initialBoard]);
+
+  useEffect(() => {
     // Show/hide Telegram main button based on board completion
-    if (tg && currentBoard) {
-      const isComplete = isBoardComplete(currentBoard);
+    if (tg && gameHistory.currentBoard) {
+      const isComplete = isBoardComplete(gameHistory.currentBoard);
 
       if (isComplete && !isValidating) {
         tg.MainButton.setText('Submit Solution');
@@ -50,7 +95,7 @@ export default function GamePage() {
         tg.MainButton.offClick(handleSubmit);
       }
     };
-  }, [currentBoard, tg, isValidating]);
+  }, [gameHistory.currentBoard, tg, isValidating]);
 
   useEffect(() => {
     // Setup Telegram back button
@@ -67,6 +112,24 @@ export default function GamePage() {
     };
   }, [tg]);
 
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.metaKey) {
+        if (e.key === 'z') {
+          e.preventDefault();
+          handleUndo();
+        } else if (e.key === 'y') {
+          e.preventDefault();
+          handleRedo();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [gameHistory.canUndo, gameHistory.canRedo]);
+
   const loadPuzzle = async () => {
     if (!id) {
       setError('Invalid puzzle ID');
@@ -77,9 +140,10 @@ export default function GamePage() {
     try {
       setLoading(true);
       setError(null);
-      const puzzle = await fetchPuzzleById(parseInt(id));
-      setInitialBoard(puzzle.initial_board);
-      setCurrentBoard(copyBoard(puzzle.initial_board));
+      const puzzleData = await fetchPuzzleById(parseInt(id));
+      setPuzzle(puzzleData);
+      setInitialBoard(puzzleData.initial_board);
+      gameHistory.reset(puzzleData.initial_board);
     } catch (err) {
       setError('Failed to load puzzle. Please try again.');
       console.error('Error loading puzzle:', err);
@@ -91,35 +155,70 @@ export default function GamePage() {
   const handleCellClick = (row: number, col: number) => {
     setSelectedCell({ row, col });
     setShowNumberPicker(true);
+    setShowHint(false);
   };
 
   const handleSelectNumber = (num: number) => {
-    if (selectedCell && currentBoard) {
-      const newBoard = copyBoard(currentBoard);
+    if (selectedCell && gameHistory.currentBoard) {
+      const newBoard = copyBoard(gameHistory.currentBoard);
       newBoard[selectedCell.row][selectedCell.col] = num;
-      setCurrentBoard(newBoard);
+      gameHistory.pushState(newBoard);
       setSelectedCell(null);
     }
   };
 
   const handleClearCell = () => {
-    if (selectedCell && currentBoard) {
-      const newBoard = copyBoard(currentBoard);
+    if (selectedCell && gameHistory.currentBoard) {
+      const newBoard = copyBoard(gameHistory.currentBoard);
       newBoard[selectedCell.row][selectedCell.col] = 0;
-      setCurrentBoard(newBoard);
+      gameHistory.pushState(newBoard);
       setSelectedCell(null);
     }
   };
 
+  const handleUndo = useCallback(() => {
+    gameHistory.undo();
+  }, [gameHistory]);
+
+  const handleRedo = useCallback(() => {
+    gameHistory.redo();
+  }, [gameHistory]);
+
+  const handleHint = () => {
+    setShowHint(true);
+    setTimeout(() => setShowHint(false), 3000);
+  };
+
+  const handleReset = () => {
+    if (confirm('Are you sure you want to reset the puzzle? All progress will be lost.')) {
+      if (initialBoard) {
+        gameHistory.reset(initialBoard);
+        timer.reset();
+        timer.start();
+        removeFromLocalStorage(storageKey);
+      }
+    }
+  };
+
   const handleSubmit = async () => {
-    if (!currentBoard || !id || isValidating) return;
+    if (!gameHistory.currentBoard || !id || isValidating) return;
 
     try {
       setIsValidating(true);
-      const result = await validateSolution(parseInt(id), currentBoard);
+      timer.pause();
+      const result = await validateSolution(parseInt(id), gameHistory.currentBoard);
       setIsSuccess(result.valid);
-      setResultMessage(result.message);
+      setResultMessage(
+        result.valid
+          ? `${result.message} Time: ${timer.formattedTime}`
+          : result.message
+      );
       setShowResult(true);
+
+      // Clear saved state on completion
+      if (result.valid) {
+        removeFromLocalStorage(storageKey);
+      }
 
       // Hide Telegram button
       if (tg) {
@@ -130,6 +229,7 @@ export default function GamePage() {
       setIsSuccess(false);
       setResultMessage('Failed to validate solution. Please try again.');
       setShowResult(true);
+      timer.start();
     } finally {
       setIsValidating(false);
     }
@@ -152,7 +252,7 @@ export default function GamePage() {
     );
   }
 
-  if (error || !initialBoard || !currentBoard) {
+  if (error || !initialBoard || !gameHistory.currentBoard || !puzzle) {
     return (
       <div className="game-page-container">
         <div className="error">
@@ -165,23 +265,45 @@ export default function GamePage() {
     );
   }
 
-  const isComplete = isBoardComplete(currentBoard);
+  const isComplete = isBoardComplete(gameHistory.currentBoard);
+  const filledCells = gameHistory.currentBoard.flat().filter(cell => cell !== 0).length;
 
   return (
     <div className="game-page-container">
       <div className="game-header">
         <h1 className="game-title">Puzzle #{id}</h1>
         <p className="game-instruction">
-          {isComplete ? 'Complete! Tap Submit to check your solution.' : 'Tap an empty cell to fill it'}
+          {isComplete
+            ? 'Complete! Tap Submit to check your solution.'
+            : 'Tap an empty cell to fill it'}
         </p>
       </div>
 
+      <GameControls
+        timer={timer.formattedTime}
+        progress={{ filled: filledCells, total: 36 }}
+        canUndo={gameHistory.canUndo}
+        canRedo={gameHistory.canRedo}
+        canHint={!isComplete}
+        onUndo={handleUndo}
+        onRedo={handleRedo}
+        onHint={handleHint}
+        onReset={handleReset}
+        difficulty={puzzle.difficulty}
+      />
+
       <GameBoard
         initialBoard={initialBoard}
-        currentBoard={currentBoard}
+        currentBoard={gameHistory.currentBoard}
         selectedCell={selectedCell}
         onCellClick={handleCellClick}
       />
+
+      {showHint && (
+        <div className="hint-message">
+          💡 Invalid cells are highlighted in red
+        </div>
+      )}
 
       {/* Submit button for non-Telegram environments */}
       {isComplete && !tg && (

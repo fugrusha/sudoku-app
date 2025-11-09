@@ -60,6 +60,34 @@
   cursor: not-allowed;
 }
 
+.hint-message {
+  text-align: center;
+  margin-top: 16px;
+  padding: 12px 20px;
+  background-color: rgba(255, 193, 7, 0.1);
+  border: 2px solid #FFC107;
+  border-radius: 8px;
+  color: var(--tg-theme-text-color, #000);
+  font-size: 14px;
+  font-weight: 500;
+  animation: fadeInOut 3s ease;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  10%, 90% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
 /* Responsive design */
 @media (max-width: 480px) {
   .game-page-container {

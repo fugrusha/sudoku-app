@@ -1,0 +1,151 @@
+.game-controls {
+  width: 100%;
+  max-width: 600px;
+  margin: 16px auto 0;
+  padding: 0 16px;
+}
+
+.controls-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.top-row {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.control-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.difficulty-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.timer {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--tg-theme-text-color, #000);
+  font-variant-numeric: tabular-nums;
+}
+
+.progress {
+  font-size: 14px;
+  color: var(--tg-theme-hint-color, #666);
+  font-variant-numeric: tabular-nums;
+}
+
+.action-row {
+  justify-content: space-between;
+}
+
+.control-button {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 8px;
+  background-color: var(--tg-theme-button-color, #3390ec);
+  color: var(--tg-theme-button-text-color, #fff);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  min-width: 60px;
+}
+
+.control-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(51, 144, 236, 0.3);
+}
+
+.control-button:active:not(:disabled) {
+  transform: translateY(0);
+  opacity: 0.9;
+}
+
+.control-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.control-button.reset-button {
+  background-color: transparent;
+  color: var(--tg-theme-hint-color, #999);
+  border: 2px solid var(--tg-theme-hint-color, #999);
+}
+
+.control-button.reset-button:hover:not(:disabled) {
+  background-color: rgba(0, 0, 0, 0.05);
+  box-shadow: none;
+}
+
+.button-icon {
+  font-size: 20px;
+}
+
+.button-label {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .game-controls {
+    padding: 0 12px;
+  }
+
+  .control-button {
+    padding: 8px 6px;
+    min-width: 55px;
+  }
+
+  .button-icon {
+    font-size: 18px;
+  }
+
+  .button-label {
+    font-size: 10px;
+  }
+
+  .timer {
+    font-size: 14px;
+  }
+
+  .progress {
+    font-size: 12px;
+  }
+
+  .difficulty-badge {
+    font-size: 10px;
+    padding: 3px 10px;
+  }
+}
+
+@media (max-width: 380px) {
+  .control-button {
+    padding: 6px 4px;
+    min-width: 50px;
+    gap: 2px;
+  }
+
+  .button-icon {
+    font-size: 16px;
+  }
+
+  .button-label {
+    font-size: 9px;
+  }
+}
