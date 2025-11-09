@@ -48,11 +48,14 @@ export default function GamePage() {
   }, [id]);
 
   useEffect(() => {
-    // Restore saved game state
+    // Restore saved game state and start timer
     if (initialBoard && savedState) {
       gameHistory.reset(savedState.board);
       timer.reset();
-      // We can't perfectly restore timer, but we can note it was in progress
+      timer.start(); // Start timer after restoring
+    } else if (initialBoard) {
+      // Start timer for new games
+      timer.start();
     }
   }, [initialBoard]);
 
@@ -66,13 +69,6 @@ export default function GamePage() {
       });
     }
   }, [gameHistory.currentBoard, timer.seconds, gameHistory.moveCount]);
-
-  useEffect(() => {
-    // Start timer when puzzle loads
-    if (initialBoard && !timer.isRunning) {
-      timer.start();
-    }
-  }, [initialBoard]);
 
   useEffect(() => {
     // Show/hide Telegram main button based on board completion
