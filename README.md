@@ -210,10 +210,18 @@ Content-Type: application/json
 - [x] Add Telegram Back Button integration
 - [x] Responsive design for mobile devices
 
-### 📋 Phase 6: Polish & Enhancement (Upcoming)
-- [ ] UI/UX improvements
-- [ ] Animations
-- [ ] Additional features
+### ✅ Phase 4: Polish & Enhancement (Completed)
+- [x] Undo/Redo functionality with full move history
+- [x] Timer to track solve time (auto-starts, pauses on submit)
+- [x] Progress indicator (X/36 cells filled)
+- [x] Auto-save game state to local storage
+- [x] Resume incomplete games automatically
+- [x] Hint system (highlights invalid cells)
+- [x] Reset puzzle functionality
+- [x] Difficulty badge on game page
+- [x] Keyboard shortcuts (Ctrl+Z for undo, Ctrl+Y for redo)
+- [x] Game controls component with all actions
+- [x] Display solve time in success message
 
 ### 📋 Phase 7: Testing (Upcoming)
 - [ ] Functional testing
@@ -331,17 +339,63 @@ npm run dev
 1. **Home Screen**: User sees list of puzzles grouped by difficulty
 2. **Select Puzzle**: Tap on a puzzle card to start playing
 3. **Play Game**:
+   - Timer starts automatically
+   - Game auto-saves progress to local storage
    - Tap empty cell to open number picker
    - Select number (1-6) or clear cell
+   - Use Undo/Redo buttons or keyboard shortcuts (Ctrl+Z/Ctrl+Y)
    - Invalid moves are highlighted in red
+   - Use Hint button to highlight invalid cells
+   - Monitor progress (X/36 cells filled)
+   - Reset puzzle if needed (clears all progress)
    - Complete all cells to enable Submit button
 4. **Submit Solution**:
    - In Telegram: Tap the Main Button at bottom
    - In Browser: Tap the Submit button below grid
+   - Timer pauses during validation
 5. **View Result**:
-   - Success: Celebration animation with option to play more
+   - Success: Celebration animation with solve time
    - Failure: Encouraging message with option to try again
 6. **Continue**: Return to puzzle list or try another puzzle
+7. **Resume**: If you leave mid-game, your progress is auto-saved and restored when you return
+
+## Game Features
+
+### Quality of Life Features
+
+**Undo/Redo System**
+- Full move history tracking
+- Unlimited undo/redo
+- Keyboard shortcuts: Ctrl+Z (undo), Ctrl+Y (redo)
+- Button controls in game interface
+
+**Timer**
+- Auto-starts when puzzle loads
+- Pauses when submitting solution
+- Displays in MM:SS format
+- Shows solve time in success message
+
+**Auto-Save & Resume**
+- Game state automatically saved to browser local storage
+- Resume incomplete puzzles when returning
+- Cleared automatically when puzzle is solved
+
+**Hint System**
+- Highlights all cells with invalid placements
+- Helps identify errors without giving away solution
+- Available until puzzle is completed
+
+**Progress Tracking**
+- Shows filled cells count (X/36)
+- Helps track completion progress
+
+**Reset Function**
+- Clear all progress and start over
+- Confirmation prompt to prevent accidents
+
+**Difficulty Indicator**
+- Color-coded badge on game page
+- Easy (Green), Medium (Orange), Hard (Red)
 
 ## Telegram Mini App Setup
 
@@ -362,10 +416,10 @@ MIT
 
 ## Next Steps
 
-The core functionality is complete! Future enhancements could include:
-- User progress tracking
-- Timer for each puzzle
-- Hint system
-- Undo/Redo functionality
-- Leaderboards
-- Additional puzzle sizes (9x9, 4x4)
+The app is feature-complete and ready for deployment! Future enhancements could include:
+- User progress tracking across sessions (backend integration)
+- Leaderboards and competitive features
+- Additional puzzle sizes (9x9 standard Sudoku, 4x4 mini)
+- Multiplayer/co-op solving
+- Daily challenges
+- Achievement system
