@@ -293,6 +293,15 @@ export default function GamePage() {
             <p className="congratulation-message">
               You've filled all the cells! Submit your solution to verify it's correct.
             </p>
+            {!tg && (
+              <button
+                className="congratulation-submit-button"
+                onClick={handleSubmit}
+                disabled={isValidating}
+              >
+                {isValidating ? 'Checking...' : 'Submit Solution'}
+              </button>
+            )}
           </div>
         </div>
       )}
