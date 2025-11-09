@@ -48,11 +48,14 @@ export default function GamePage() {
   }, [id]);
 
   useEffect(() => {
-    // Restore saved game state
+    // Restore saved game state and start timer
     if (initialBoard && savedState) {
       gameHistory.reset(savedState.board);
       timer.reset();
-      // We can't perfectly restore timer, but we can note it was in progress
+      timer.start(); // Start timer after restoring
+    } else if (initialBoard) {
+      // Start timer for new games
+      timer.start();
     }
   }, [initialBoard]);
 
@@ -66,13 +69,6 @@ export default function GamePage() {
       });
     }
   }, [gameHistory.currentBoard, timer.seconds, gameHistory.moveCount]);
-
-  useEffect(() => {
-    // Start timer when puzzle loads
-    if (initialBoard && !timer.isRunning) {
-      timer.start();
-    }
-  }, [initialBoard]);
 
   useEffect(() => {
     // Show/hide Telegram main button based on board completion
@@ -271,13 +267,38 @@ export default function GamePage() {
   return (
     <div className="game-page-container">
       <div className="game-header">
-        <h1 className="game-title">Puzzle #{id}</h1>
+        <div className="game-header-top">
+          <h1 className="game-title">Puzzle #{id}</h1>
+          <button className="menu-button" onClick={handleBackToList} title="Back to Menu">
+            ☰
+          </button>
+        </div>
         <p className="game-instruction">
           {isComplete
             ? 'Complete! Tap Submit to check your solution.'
             : 'Tap an empty cell to fill it'}
         </p>
       </div>
+
+      {/* Congratulation message when puzzle is complete */}
+      {isComplete && !showResult && (
+        <div className="congratulation-banner">
+          <div className="congratulation-icon">🎉</div>
+          <div className="congratulation-content">
+            <h2 className="congratulation-title">Congratulations!</h2>
+            <p className="congratulation-message">
+              You've filled all the cells! Submit your solution to verify it's correct.
+            </p>
+            <button
+              className="congratulation-submit-button"
+              onClick={handleSubmit}
+              disabled={isValidating}
+            >
+              {isValidating ? 'Checking...' : 'Submit Solution'}
+            </button>
+          </div>
+        </div>
+      )}
 
       <GameControls
         timer={timer.formattedTime}

@@ -12,17 +12,140 @@
   margin-bottom: 20px;
 }
 
+.game-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 8px;
+}
+
 .game-title {
   font-size: 24px;
   font-weight: bold;
-  margin: 0 0 8px 0;
+  margin: 0;
   color: var(--tg-theme-text-color, #000);
+}
+
+.menu-button {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--tg-theme-button-color, #3390ec);
+  color: var(--tg-theme-button-text-color, #fff);
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.menu-button:hover {
+  transform: translateY(-50%) scale(1.05);
+  box-shadow: 0 2px 8px rgba(51, 144, 236, 0.3);
+}
+
+.menu-button:active {
+  transform: translateY(-50%) scale(0.95);
+  opacity: 0.9;
 }
 
 .game-instruction {
   font-size: 14px;
   color: var(--tg-theme-hint-color, #999);
   margin: 0;
+}
+
+.congratulation-banner {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+  animation: slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.congratulation-icon {
+  font-size: 48px;
+  flex-shrink: 0;
+  animation: bounce 1s ease infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.congratulation-content {
+  flex: 1;
+  text-align: left;
+}
+
+.congratulation-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+  color: #ffffff;
+}
+
+.congratulation-message {
+  font-size: 14px;
+  margin: 0 0 16px 0;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.4;
+}
+
+.congratulation-submit-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: #ffffff;
+  color: #667eea;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.congratulation-submit-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.congratulation-submit-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.congratulation-submit-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .game-actions {
@@ -106,5 +229,33 @@
     padding: 14px 28px;
     font-size: 16px;
     min-width: 180px;
+  }
+
+  .menu-button {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+
+  .congratulation-banner {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .congratulation-icon {
+    font-size: 40px;
+  }
+
+  .congratulation-title {
+    font-size: 18px;
+  }
+
+  .congratulation-message {
+    font-size: 13px;
+  }
+
+  .congratulation-submit-button {
+    padding: 10px 20px;
+    font-size: 14px;
   }
 }
