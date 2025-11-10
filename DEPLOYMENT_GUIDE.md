@@ -107,19 +107,23 @@ BotFather will give you a token that looks like:
    - Select the `backend` directory as the root
    - Railway will auto-detect Node.js
 
-4. **Add Environment Variables** (optional):
+4. **Configure Build Settings**:
+   - **Build Command**: `npm install && npm run build`
+   - **Start Command**: `npm start`
+   - Railway will automatically run these commands
+
+5. **Add Environment Variables** (optional):
    ```
    PORT=5001
    NODE_ENV=production
    ```
 
-5. **Initialize the database**:
-   - After deployment, run the init script via Railway CLI:
-   ```bash
-   railway run npm run init-db
-   ```
+6. **Note**: The `npm run build` command automatically:
+   - Compiles TypeScript to JavaScript
+   - Initializes the database
+   - Generates 100 puzzles (25 of each difficulty)
 
-6. **Note your backend URL**: e.g., `https://your-app.railway.app`
+7. **Note your backend URL**: e.g., `https://your-app.railway.app`
 
 ### Option 2: Deploy to Render
 
@@ -128,16 +132,17 @@ BotFather will give you a token that looks like:
 3. **Connect your GitHub repository**
 4. **Configure the service**:
    - **Root Directory**: `backend`
-   - **Build Command**: `npm install`
+   - **Build Command**: `npm install && npm run build`
    - **Start Command**: `npm start`
    - **Environment**: Node
 
-5. **Add Environment Variables** (if needed)
-
-6. **Initialize the database** via Render Shell:
-   ```bash
-   npm run init-db
+5. **Add Environment Variables** (if needed):
    ```
+   PORT=5001
+   NODE_ENV=production
+   ```
+
+6. **Note**: The build command automatically initializes the database and generates puzzles
 
 ### Option 3: Deploy to Your Own VPS
 
@@ -424,6 +429,47 @@ npm run preview
 
 ## Troubleshooting
 
+### Deployment Issues
+
+#### Backend: "Missing script: init-db" Error
+
+If you see this error during deployment:
+```
+npm error Missing script: "init-db"
+```
+
+**Solution**: Make sure you're on the latest version with the correct package.json scripts. Run:
+```bash
+git pull origin main
+```
+
+The `init-db` script is now part of the build process and runs automatically.
+
+#### Backend: "Cannot find module dist/server.js"
+
+This means TypeScript wasn't compiled.
+
+**Solution**: Ensure your deployment platform runs the build command:
+```bash
+npm install && npm run build
+```
+
+For Railway/Render, set:
+- **Build Command**: `npm install && npm run build`
+- **Start Command**: `npm start`
+
+#### Backend: Database not initialized
+
+If your backend starts but has no puzzles:
+
+**Locally**:
+```bash
+cd backend
+npm run init-db
+```
+
+**On deployment platform**: The `npm run build` command should automatically initialize the database. If it doesn't, check the build logs.
+
 ### Database Issues
 
 If you need to reset the database:
@@ -455,6 +501,18 @@ rm -rf node_modules package-lock.json
 npm install
 npm run build
 ```
+
+### Port Issues
+
+If you see "Port already in use" errors:
+
+**Locally**:
+```bash
+# Find and kill the process using port 5001
+lsof -ti:5001 | xargs kill -9
+```
+
+**On deployment**: Most platforms assign ports automatically via the `PORT` environment variable.
 
 ---
 

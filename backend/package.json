@@ -4,8 +4,9 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "build": "tsc && npm run init-db",
     "start": "node dist/server.js",
+    "init-db": "tsx src/config/initDb.ts",
     "db:init": "tsx src/config/initDb.ts",
     "db:generate": "tsx src/utils/generatePuzzles.ts",
     "test:sudoku": "tsx src/utils/testSudoku.ts"
