@@ -18,7 +18,7 @@ app.use(express.json());
 initializeDatabase();
 
 // Health check
-app.get('/health', (req, res) => {
+app.get('/health', (_req, res) => {
   res.json({ status: 'ok', message: 'Sudoku API is running' });
 });
 
@@ -26,7 +26,7 @@ app.get('/health', (req, res) => {
 app.use('/api/puzzles', puzzleRoutes);
 
 // Error handling middleware
-app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error('Error:', err.stack);
   res.status(500).json({ error: 'Something went wrong!' });
 });

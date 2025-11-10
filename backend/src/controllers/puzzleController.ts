@@ -3,13 +3,13 @@ import { PuzzleModel } from '../models/Puzzle.js';
 
 export class PuzzleController {
   // Get all puzzles grouped by difficulty
-  static getAllPuzzles(req: Request, res: Response) {
+  static getAllPuzzles(_req: Request, res: Response) {
     try {
       const puzzles = PuzzleModel.getAll();
-      res.json(puzzles);
+      return res.json(puzzles);
     } catch (error) {
       console.error('Error fetching puzzles:', error);
-      res.status(500).json({ error: 'Failed to fetch puzzles' });
+      return res.status(500).json({ error: 'Failed to fetch puzzles' });
     }
   }
 
@@ -23,10 +23,10 @@ export class PuzzleController {
       }
 
       const puzzles = PuzzleModel.getByDifficulty(difficulty);
-      res.json(puzzles);
+      return res.json(puzzles);
     } catch (error) {
       console.error('Error fetching puzzles by difficulty:', error);
-      res.status(500).json({ error: 'Failed to fetch puzzles' });
+      return res.status(500).json({ error: 'Failed to fetch puzzles' });
     }
   }
 
@@ -45,10 +45,10 @@ export class PuzzleController {
         return res.status(404).json({ error: 'Puzzle not found' });
       }
 
-      res.json(puzzle);
+      return res.json(puzzle);
     } catch (error) {
       console.error('Error fetching puzzle:', error);
-      res.status(500).json({ error: 'Failed to fetch puzzle' });
+      return res.status(500).json({ error: 'Failed to fetch puzzle' });
     }
   }
 
@@ -73,13 +73,13 @@ export class PuzzleController {
 
       const isValid = PuzzleModel.validateSolution(id, solution);
 
-      res.json({
+      return res.json({
         valid: isValid,
         message: isValid ? 'Congratulations! Solution is correct!' : 'Solution is incorrect. Try again!'
       });
     } catch (error) {
       console.error('Error validating solution:', error);
-      res.status(500).json({ error: 'Failed to validate solution' });
+      return res.status(500).json({ error: 'Failed to validate solution' });
     }
   }
 }
